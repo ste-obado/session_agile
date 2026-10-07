@@ -58,6 +58,48 @@ nothing is recording, it shows a brief hint instead of trying to start.
 If the toolbar icon isn't visible, click the puzzle-piece icon in Chrome's
 toolbar and pin "Class Recorder & Self-Study Tool" for one-click access.
 
+## Library layout (the adopted sketch, now real)
+
+`library.html`/`library.js` is now the sidebar layout from your hand-drawn
+sketch, not a flat list:
+
+- **Collapsible sidebar** — logo, a Recents list of your actual recordings,
+  a pin (&#9733;) button per recording that keeps it at the top of the
+  list, and a bottom section with a placeholder "You" row (no accounts
+  yet) and a real link to Settings
+- **Main panel** — shows the selected recording, with Play/Download/"…"
+  controls. The "…" menu has real Rename (prompts, then persists),
+  Download, and Delete actions
+- **Walkthrough** — opens below, in either reading or chat style per
+  Settings, exactly as before — just now living in the sidebar layout
+  instead of a flat card
+
+Pinned recordings sort to the top; everything else sorts by most recent.
+
+## Settings
+
+Click **Settings** (top-right of the library page) to reach:
+
+- **Keyboard shortcut** — shows the current one, with a button that opens
+  Chrome's own shortcut editor to change it
+- **Keep tab active while recording** — really toggles the auto-discard
+  fix from earlier; `background.js` now checks this before calling
+  `chrome.tabs.update(..., { autoDiscardable: false })`
+- **Backend URL** — where recordings are sent for a walkthrough (was
+  already read by `library.js`, now has an actual field to set it)
+- **Walkthrough style** — **reading** (the plain expandable text panel)
+  or **chat** (a real back-and-forth: your question is sent to the
+  backend's new `/followup` endpoint, tested and working with the stub
+  response)
+- **Auto-delete old recordings** — enforced both here and every time
+  `library.html` loads, via `applyRetentionPolicy()`
+- **Clear all recordings** — wipes the IndexedDB store, with a
+  confirmation step
+
+All of this is real, wired-up behavior, not placeholders — except the
+actual LLM answer inside `/followup`, which is still the same kind of
+stub as `/walkthrough` until you plug in a real model.
+
 ## Loading the extension
 
 1. Open `chrome://extensions`

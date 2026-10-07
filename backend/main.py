@@ -39,6 +39,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+bcb1ad59fe8a02eedaa386aeb58c7ceff7890022
 
 def transcribe_audio(audio_path: str) -> str:
     """
@@ -122,6 +123,32 @@ async def walkthrough(
         Path(tmp_path).unlink(missing_ok=True)
 
     return {"transcript": transcript, "walkthrough": walkthrough_text}
+
+
+def answer_followup(transcript: str, question: str) -> str:
+    """
+    TODO: replace with a real LLM call, same pattern as generate_walkthrough,
+    but with the student's specific question added to the prompt:
+
+        prompt = f'''
+        The student is reviewing this class transcript and just asked a
+        follow-up question. Answer it directly, referencing the transcript
+        where relevant.
+
+        Transcript:
+        {transcript}
+
+        Question: {question}
+        '''
+
+    Left as a stub for the same reason as the other two functions above.
+    """
+    return f"[STUB ANSWER] Once answer_followup() is wired to a real LLM, this will actually answer: \"{question}\""
+
+
+@app.post("/followup")
+async def followup(transcript: str = Form(...), question: str = Form(...)):
+    return {"answer": answer_followup(transcript, question)}
 
 
 @app.get("/health")

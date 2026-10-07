@@ -2,182 +2,173 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Your recordings</title>
+<title>Recordings</title>
 <style>
   :root {
-    --paper: #FBF8F3;
-    --page: #FFFFFF;
-    --page-warm: #FFFCF6;
-    --ink: #2B2A26;
-    --ink-soft: #6B6558;
-    --line: #E3DDD0;
-    --accent: #2F5D50;
-    --accent-soft: #E7EEEB;
-    --live: #B23B2E;
+    --bg: #1B1F24;
+    --row: #21262D;
+    --line: #333B44;
+    --text: #EDE9DF;
+    --text-soft: #9AA2AB;
+    --amber: #D9A441;
+    --amber-soft: rgba(217, 164, 65, 0.14);
+    --rust: #C1554A;
   }
 
   * { box-sizing: border-box; }
-
   body {
     margin: 0;
-    padding: 48px 24px 80px;
-    background: var(--paper);
-    color: var(--ink);
-    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .page {
-    max-width: 720px;
-    margin: 0 auto;
-  }
-
-  h1 {
-    font: 26px/1.2 Georgia, "Iowan Old Style", "Times New Roman", serif;
-    font-weight: 400;
-    margin: 0 0 6px;
-    color: var(--ink);
-  }
-
-  .subhead {
-    color: var(--ink-soft);
-    margin: 0 0 36px;
-    font-size: 14px;
-  }
-
-  .empty {
-    padding: 40px 0;
-    color: var(--ink-soft);
-    border-top: 1px solid var(--line);
-  }
-
-  .rec {
-    display: flex;
-    border-top: 1px solid var(--line);
-    padding: 22px 0;
-    gap: 16px;
-  }
-
-  .rec:last-child {
-    border-bottom: 1px solid var(--line);
-  }
-
-  .rec-bar {
-    width: 3px;
-    border-radius: 2px;
-    background: var(--line);
-    flex-shrink: 0;
-  }
-
-  .rec.has-walkthrough .rec-bar {
-    background: var(--accent);
-  }
-
-  .rec-body {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .rec-title {
-    font: 18px/1.3 Georgia, "Iowan Old Style", "Times New Roman", serif;
-    margin: 0 0 4px;
-  }
-
-  .rec-meta {
-    color: var(--ink-soft);
-    font-size: 13px;
-    margin: 0 0 14px;
-  }
-
-  .rec-actions {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 4px;
-  }
-
-  button {
-    font: 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    padding: 7px 12px;
-    border-radius: 7px;
-    border: 1px solid var(--line);
-    background: var(--page);
-    color: var(--ink);
-    cursor: pointer;
-  }
-
-  button:hover { border-color: #C9C1AF; }
-  button:disabled { opacity: 0.5; cursor: default; }
-
-  .rec-actions .primary {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-soft);
-  }
-
-  .rec-actions .primary:hover { border-color: var(--accent); }
-
-  audio {
-    display: none;
-    width: 100%;
-    margin-top: 12px;
-  }
-
-  .page-panel {
-    display: none;
-    margin-top: 18px;
-    background: var(--page-warm);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 24px 28px;
-    animation: unfold 180ms ease;
-  }
-
-  @keyframes unfold {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .page-panel h3 {
-    font: 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    font-weight: 600;
-    margin: 0 0 12px;
-    color: var(--ink-soft);
-  }
-
-  .page-panel .body-text {
-    font: 16px/1.7 Georgia, "Iowan Old Style", "Times New Roman", serif;
-    max-width: 62ch;
-    white-space: pre-wrap;
-    color: var(--ink);
-  }
-
-  .followup-row {
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid var(--line);
-    display: flex;
-    gap: 8px;
-  }
-
-  .followup-row input {
-    flex: 1;
+    background: var(--bg);
+    color: var(--text);
     font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    padding: 8px 10px;
-    border: 1px solid var(--line);
-    border-radius: 7px;
-    background: var(--page);
-    color: var(--ink-soft);
+    height: 100vh;
+    overflow: hidden;
   }
 
-  .followup-row input::placeholder { color: #A79E8C; }
+  .shell { display: flex; height: 100vh; }
+
+  #sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    transition: width 150ms ease;
+    overflow: hidden;
+  }
+  #sidebar.collapsed { width: 56px; padding: 14px 10px; }
+  #sidebar.collapsed .hide-on-collapse { display: none !important; }
+
+  .sidebar-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .logo { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .logo-mark { width: 20px; height: 20px; border-radius: 5px; background: var(--amber); flex-shrink: 0; }
+  .logo-label { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  button.icon-btn {
+    width: 26px; height: 26px; padding: 0; flex-shrink: 0;
+    border-radius: 3px; border: 1px solid var(--line); background: #14171B; color: var(--text);
+    cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px;
+  }
+  button.icon-btn:hover { border-color: #4A5560; }
+
+  .section-label { font-size: 10px; color: var(--text-soft); text-transform: lowercase; letter-spacing: 1px; margin: 0 0 6px; }
+
+  #rec-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
+
+  .rec-item {
+    display: flex; align-items: center; gap: 8px; padding: 7px 6px; border-radius: 3px; cursor: pointer;
+  }
+  .rec-item:hover { background: #262C33; }
+  .rec-item.active { background: var(--amber-soft); }
+  .rec-item .rec-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+  .rec-item .pin-btn { flex-shrink: 0; background: none; border: none; cursor: pointer; padding: 2px; color: var(--text-soft); font-size: 13px; }
+  .rec-item .pin-btn.pinned { color: var(--amber); }
+
+  .sidebar-bottom { border-top: 1px solid var(--line); padding-top: 8px; display: flex; flex-direction: column; gap: 2px; }
+  .sidebar-bottom-row { display: flex; align-items: center; gap: 8px; padding: 7px 6px; border-radius: 3px; color: var(--text-soft); font-size: 13px; cursor: pointer; text-decoration: none; }
+  .sidebar-bottom-row:hover { background: #262C33; }
+  .avatar-dot { width: 18px; height: 18px; border-radius: 50%; background: #3A4148; flex-shrink: 0; }
+
+  #main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+  #main-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; border-bottom: 1px solid var(--line); position: relative; flex-shrink: 0;
+  }
+  #main-title { font-size: 15px; font-weight: 600; }
+  #main-meta { font-size: 12px; color: var(--text-soft); margin-top: 2px; }
+
+  #menu-dropdown {
+    display: none; position: absolute; top: 46px; right: 16px; z-index: 3;
+    background: #14171B; border: 1px solid var(--line); border-radius: 4px; min-width: 130px;
+  }
+  #menu-dropdown div { padding: 9px 12px; font-size: 13px; cursor: pointer; }
+  #menu-dropdown div:hover { background: #21262D; }
+  #menu-dropdown .danger { color: var(--rust); }
+
+  #main-body { flex: 1; overflow-y: auto; padding: 20px; }
+
+  .counter-inline {
+    display: inline-block; font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    color: var(--amber); font-size: 13px; background: #14171B; border: 1px solid var(--line);
+    border-radius: 3px; padding: 3px 8px; margin-right: 8px;
+  }
+
+  .ctrl-btn {
+    width: 32px; height: 32px; border-radius: 3px; border: 1px solid var(--line); background: #14171B;
+    color: var(--text); cursor: pointer; font-size: 14px; display: inline-flex; align-items: center; justify-content: center;
+  }
+  .ctrl-btn:hover { border-color: #4A5560; }
+
+  .readout-btn {
+    border-radius: 3px; border: 1px solid var(--amber); background: var(--amber-soft); color: var(--amber);
+    cursor: pointer; font-size: 12px; font-weight: 600; padding: 0 14px; height: 32px;
+  }
+  .readout-btn:disabled { opacity: 0.5; cursor: default; }
+
+  audio { display: none; width: 100%; margin-top: 14px; }
+
+  .readout {
+    display: none; margin-top: 18px; background: #14171B; border: 1px solid var(--line); border-radius: 4px; padding: 18px 20px;
+  }
+  .readout-label { font: 11px ui-monospace, "SF Mono", Consolas, monospace; color: var(--amber); text-transform: lowercase; letter-spacing: 1px; margin: 0 0 10px; }
+  .readout-body { font-size: 14px; line-height: 1.65; color: var(--text); white-space: pre-wrap; max-width: 68ch; }
+
+  .followup-row { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; gap: 8px; align-items: center; }
+  .followup-row .prompt { font-family: ui-monospace, "SF Mono", Consolas, monospace; color: var(--text-soft); font-size: 13px; }
+  .followup-row input { flex: 1; font-size: 13px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 3px; background: var(--bg); color: var(--text-soft); }
+  .followup-row input::placeholder { color: #5A6169; }
+  .followup-row button { border-radius: 3px; border: 1px solid var(--line); background: #14171B; color: var(--text-soft); padding: 7px 12px; font-size: 12px; cursor: pointer; }
+
+  .empty { color: var(--text-soft); padding: 40px; text-align: center; }
 </style>
 </head>
 <body>
-  <div class="page">
-    <h1>Your recordings</h1>
-    <p class="subhead">Recorded independently, kept on this device.</p>
-    <div id="rec-list"></div>
+  <div class="shell">
+    <div id="sidebar">
+      <div class="sidebar-top">
+        <div class="logo">
+          <div class="logo-mark"></div>
+          <span class="logo-label hide-on-collapse">Recorder</span>
+        </div>
+        <button class="icon-btn" id="collapse-btn" aria-label="Collapse sidebar">&#8249;</button>
+      </div>
+      <p class="section-label hide-on-collapse">Recents</p>
+      <div id="rec-list"></div>
+      <div class="sidebar-bottom">
+        <div class="sidebar-bottom-row">
+          <div class="avatar-dot"></div>
+          <span class="hide-on-collapse">You</span>
+        </div>
+        <a class="sidebar-bottom-row" href="settings.html">
+          <span aria-hidden="true">&#9881;</span>
+          <span class="hide-on-collapse">Settings</span>
+        </a>
+      </div>
+    </div>
+
+    <div id="main">
+      <div id="main-header">
+        <div>
+          <div id="main-title">No recordings yet</div>
+          <div id="main-meta"></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button class="ctrl-btn" id="play-btn" title="Play">&#9654;</button>
+          <button class="ctrl-btn" id="download-btn" title="Download">&#8681;</button>
+          <button class="ctrl-btn" id="menu-btn" title="More" aria-label="More options">&#8943;</button>
+        </div>
+        <div id="menu-dropdown">
+          <div id="rename-item">Rename</div>
+          <div id="download-item">Download</div>
+          <div class="danger" id="delete-item">Delete</div>
+        </div>
+      </div>
+      <div id="main-body">
+        <p class="empty">Start a recording from the toolbar icon while you're in a class.</p>
+      </div>
+    </div>
   </div>
   <script src="library.js"></script>
 </body>

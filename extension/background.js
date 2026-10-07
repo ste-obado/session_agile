@@ -111,7 +111,10 @@ async function startRecording(tab) {
   await setState(newState);
 
   try {
-    await chrome.tabs.update(tab.id, { autoDiscardable: false });
+    const { keepTabActive = true } = await chrome.storage.local.get("keepTabActive");
+    if (keepTabActive) {
+      await chrome.tabs.update(tab.id, { autoDiscardable: false });
+    }
   } catch (e) {
     console.warn("Could not disable auto-discard for tab:", e);
   }
