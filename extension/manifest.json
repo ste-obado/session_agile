@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Class Recorder & Self-Study Tool",
+  "version": "0.1.0",
+  "description": "Record your online classes independently and review them later with an AI walkthrough.",
+  "permissions": ["tabCapture", "downloads", "storage", "offscreen", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "commands": {
+    "toggle-recording": {
+      "suggested_key": { "default": "Ctrl+Shift+R" },
+      "description": "Start or stop recording the current tab"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Class Recorder"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["library.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+python-multipart
+
+# Add these when you wire up the real implementation:
+# openai-whisper        # or: faster-whisper
+# anthropic             # or your LLM SDK of choice
